@@ -1,0 +1,44 @@
+if(NOT COPY_SOURCE OR NOT COPY_DEST)
+    message(FATAL_ERROR "COPY_SOURCE and COPY_DEST must be set.")
+endif()
+
+string(REPLACE "|" ";" COPY_SOURCE "${COPY_SOURCE}")
+
+if(CMAKE_HOST_WIN32)
+    set(dir_file_map "")
+    set(unique_dirs "")
+
+    foreach(filepath IN LISTS COPY_SOURCE)
+        get_filename_component(dir "${filepath}" DIRECTORY)
+        get_filename_component(name "${filepath}" NAME)
+
+        if(NOT dir IN_LIST unique_dirs)
+            list(APPEND unique_dirs "${dir}")
+        endif()
+
+        list(APPEND "FILES_IN_${dir}" "${name}")
+    endforeach()
+
+    foreach(dir IN LISTS unique_dirs)
+        execute_process(
+                COMMAND robocopy.exe "${dir}" "${COPY_DEST}" ${FILES_IN_${dir}} /MT /R:0 /W:0 /NP
+                RESULT_VARIABLE rc
+        )
+
+        if(rc GREATER 7)
+            message(FATAL_ERROR "robocopy failed (exit code ${rc})")
+        endif()
+    endforeach()
+
+elseif(CMAKE_HOST_UNIX)
+    execute_process(
+            COMMAND rsync -av ${COPY_SOURCE} "${COPY_DEST}/"
+            RESULT_VARIABLE rs
+    )
+
+    if(rs GREATER 0)
+        message(FATAL_ERROR "rsync failed (exit code ${rs})")
+    endif()
+else()
+    message(FATAL_ERROR "Unsupported host platform for asset copying.")
+endif()

@@ -1,0 +1,6 @@
+set(BASE_DIR "${CMAKE_SOURCE_DIR}/Minecraft.Common")
+
+set(_MINECRAFT_CLIENT_COMMON_ROOT
+    "${CMAKE_CURRENT_SOURCE_DIR}/ClassDiagram.cd"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt"
+)
