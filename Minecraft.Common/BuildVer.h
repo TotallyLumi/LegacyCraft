@@ -1,0 +1,7 @@
+#pragma once
+
+#define VER_PRODUCTBUILD 486
+#define VER_PRODUCTVERSION_STR_W L"DEV (unknown version)"
+#define VER_FILEVERSION_STR_W VER_PRODUCTVERSION_STR_W
+#define VER_BRANCHVERSION_STR_W L"(unknown branch)"
+#define VER_NETWORK VER_PRODUCTBUILD
